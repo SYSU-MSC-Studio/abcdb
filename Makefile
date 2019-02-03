@@ -24,3 +24,7 @@ fmt:
 vet:
 	@echo "vet"
 	@go vet ./...
+
+help:
+	@echo "use make to build"
+	@echo "use make test to test"
