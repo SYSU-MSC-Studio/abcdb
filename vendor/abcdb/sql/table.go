@@ -2,8 +2,9 @@ package sql
 
 // Table : Meta-information for SQL table
 type Table struct {
-	Name   string
-	Fields []Field
+	Name     string
+	Fields   []Field
+	NRecords int
 }
 
 // Field : Meta-information for each field in table.
