@@ -10,7 +10,7 @@ type Table struct {
 //
 // **contract**
 //
-// - `this ∈ Table.Fields`
+// - `∀ field. field ∈ field.Table.Fields`
 type Field struct {
 	Name  string
 	Type  DataType
@@ -20,5 +20,5 @@ type Field struct {
 // Database is a collection of tables
 type Database struct {
 	Name   string
-	Tables []Table
+	Tables map[string]Table
 }
