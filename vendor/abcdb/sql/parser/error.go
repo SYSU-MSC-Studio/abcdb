@@ -3,11 +3,8 @@ package parser
 // ErrorCode categorizes the general type of error
 //
 // e.g. (delete them after finish)
-//
 // - invalid identifier in "seleeect field from table"
-//
 // - invalid field in "select NonExistentField from table"
-//
 // - invalid table in "select * from NonExistentTable"
 type ErrorCode int
 

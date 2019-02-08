@@ -18,6 +18,7 @@ const (
 // Value : dynamicly typed SQL value
 type Value interface {
 	Type() DataType
+	AcceptVisitor(ValueVisitor) interface{}
 }
 
 // Int32Value implements Value
@@ -25,9 +26,12 @@ type Int32Value struct {
 	Value int32
 }
 
-// Type for `Value`
 func (i Int32Value) Type() DataType {
 	return INT32
+}
+
+func (i Int32Value) AcceptVisitor(v ValueVisitor) interface{} {
+	return v.VisitInt32(i)
 }
 
 // BoolValue implements Value
@@ -35,9 +39,12 @@ type BoolValue struct {
 	Value bool
 }
 
-// Type for `Value`
 func (b BoolValue) Type() DataType {
 	return BOOL
+}
+
+func (b BoolValue) AcceptVisitor(v ValueVisitor) interface{} {
+	return v.VisitBool(b)
 }
 
 // DoubleValue implements value
@@ -45,9 +52,12 @@ type DoubleValue struct {
 	Value float64
 }
 
-// Type for `Value`
 func (d DoubleValue) Type() DataType {
 	return DOUBLE
+}
+
+func (d DoubleValue) AcceptVisitor(v ValueVisitor) interface{} {
+	return v.VisitDouble(d)
 }
 
 // Char64Value implements Value
@@ -55,7 +65,17 @@ type Char64Value struct {
 	Value [64]byte
 }
 
-// Type for `Value`
-func (c Char64Value) Type() DataType {
+func (s Char64Value) Type() DataType {
 	return CHAR64
+}
+
+func (s Char64Value) AcceptVisitor(v ValueVisitor) interface{} {
+	return v.VisitChar64(s)
+}
+
+type ValueVisitor interface {
+	VisitInt32(Int32Value) interface{}
+	VisitBool(BoolValue) interface{}
+	VisitDouble(DoubleValue) interface{}
+	VisitChar64(Char64Value) interface{}
 }

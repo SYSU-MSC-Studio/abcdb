@@ -20,9 +20,8 @@ type Select struct {
 	Fields []*sql.Field
 }
 
-// AcceptSQLVisitor of `SQL`
-func (s *Select) AcceptSQLVisitor(visitor SQLVisitor) {
-	visitor.VisitSelect(s)
+func (s *Select) AcceptSQLVisitor(visitor SQLVisitor) interface{} {
+	return visitor.VisitSelect(s)
 }
 
 // CreateTable implements SQL
@@ -37,9 +36,8 @@ type FieldInfo struct {
 	Type sql.DataType
 }
 
-// AcceptSQLVisitor of `SQL`
-func (c *CreateTable) AcceptSQLVisitor(visitor SQLVisitor) {
-	visitor.VisitCreateTable(c)
+func (c *CreateTable) AcceptSQLVisitor(visitor SQLVisitor) interface{} {
+	return visitor.VisitCreateTable(c)
 }
 
 // Insert implements SQL
@@ -58,7 +56,6 @@ type InsertValue struct {
 	Value sql.Value
 }
 
-// AcceptSQLVisitor of `SQL`
-func (i *Insert) AcceptSQLVisitor(visitor SQLVisitor) {
-	visitor.VisitInsert(i)
+func (i *Insert) AcceptSQLVisitor(visitor SQLVisitor) interface{} {
+	return visitor.VisitInsert(i)
 }
