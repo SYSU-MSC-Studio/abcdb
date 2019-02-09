@@ -80,5 +80,5 @@ type ValueVisitor interface {
 	VisitChar64(Char64Value) interface{}
 }
 
-// Record implement Serializable, see parser.go
+// Record is a sequence of sql Value
 type Record []Value
