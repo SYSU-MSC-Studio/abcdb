@@ -79,3 +79,5 @@ type ValueVisitor interface {
 	VisitDouble(DoubleValue) interface{}
 	VisitChar64(Char64Value) interface{}
 }
+
+type RecordValue []Value
