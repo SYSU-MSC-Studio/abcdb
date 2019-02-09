@@ -80,5 +80,5 @@ type ValueVisitor interface {
 	VisitChar64(Char64Value) interface{}
 }
 
-// RecordValue implement Serializable, see parser.go
-type RecordValue []Value
+// Record implement Serializable, see parser.go
+type Record []Value
