@@ -16,7 +16,8 @@ type Storage struct {
 // **contract**
 //
 // - `∀ field ∈ fields. field ∈ table.Fields`
-func (s *Storage) LinearScan(table *sql.Table, fields []sql.Field) Stream {
+func (s *Storage) LinearScan(
+	table *sql.Table, fields []sql.Field) RecordStream {
 	// TODO:
 	panic("NOT IMPLEMENTED")
 }
@@ -51,5 +52,5 @@ func (s Storage) Insert(into *sql.Table, values []InsertValue) {
 //
 // - `(sql.Record == nil && error != nil) || (sql.Record != nil && error == nil)`
 type RecordStream interface {
-	Next() (sql.RecordValue, error)
+	Next() (sql.Record, error)
 }
