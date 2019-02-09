@@ -16,7 +16,7 @@ type Storage struct {
 // - `forall field in fields(field.Table.Name == tableName)`
 func (s Storage) FullTableScan(tableName string, fields []sql.Field) Stream {
 	// TODO:
-	return nil
+	panic("NOT IMPLEMENTED")
 }
 
 // CreateTable returns nil or an error when
@@ -28,7 +28,7 @@ func (s Storage) FullTableScan(tableName string, fields []sql.Field) Stream {
 // - not all characters in `table.Name` are alphabets or digits. (e.g. `people!`or`@db`)
 func (s Storage) CreateTable(table sql.Table) error {
 	// TODO:
-	return nil
+	panic("NOT IMPLEMENTED")
 }
 
 type InsertValue struct {
@@ -47,7 +47,8 @@ type Insert struct {
 //
 // - forall `i`, `insert.Values[i].Field` is not consistent with table meta information.
 func (s Storage) Insert(insert Insert) error {
-	return nil
+	// TODO:
+	panic("NOT IMPLEMENTED")
 }
 
 // Stream is a Record generator that returns `sql.Record` lazily by method `next()`
