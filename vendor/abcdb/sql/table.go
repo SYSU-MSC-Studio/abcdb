@@ -19,6 +19,12 @@ type Field struct {
 }
 
 // Database is a collection of tables
+//
+// **contract**
+//
+// - `∀ db, table, tableName.`
+//  `   db.Tables[tableName] = (table, true)`
+//  `-> table.Name == tableName`
 type Database struct {
 	Name   string
 	Tables map[string]Table

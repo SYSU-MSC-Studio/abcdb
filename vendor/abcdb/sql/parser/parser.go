@@ -20,6 +20,7 @@ import (
 //
 // - `database != nil`
 // - `(ast == nil && error != nil) || (ast != nil && error == nil)`
+// - `database` is readonly
 func Parse(database *sql.Database, sql string) (ast.SQL, error) {
 	// TODO
 	return nil, nil
