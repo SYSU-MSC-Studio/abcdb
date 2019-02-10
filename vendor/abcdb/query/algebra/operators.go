@@ -13,6 +13,10 @@ type Operator interface {
 	RelatedTables() []*sql.Table
 
 	AcceptVisitor(OperatorVisitor) interface{}
+
+	// TODO: there may be other helper functions who reflect something of
+	//   the operator that may be useful for some equivalent transformations.
+	//   Feel free to add them if you need one.
 }
 
 // Projection implements operator
