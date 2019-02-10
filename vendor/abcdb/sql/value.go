@@ -82,3 +82,13 @@ type ValueVisitor interface {
 
 // Record is a sequence of sql Value
 type Record []Value
+
+// FieldData : value associated to a specific table field
+//
+// **contract**
+//
+// - `∀ fieldData. fieldData.Field.Type == fieldData.Value.Type()`
+type FieldData struct {
+	Field *Field
+	Value Value
+}
