@@ -7,11 +7,11 @@ import (
 // ExamplePager : All data are stored in main memory and no paging and buffering
 // AT ALL. Only for illustration and testing purpose.
 type ExamplePager struct {
-	files map[string][]byte
+	Files map[string][]byte
 }
 
 func (p ExamplePager) Read(logicalFile string, offset int, nbytes int) []byte {
-	data, exist := p.files[logicalFile]
+	data, exist := p.Files[logicalFile]
 	// no such logical file
 	if !exist {
 		return nil
@@ -35,13 +35,13 @@ func (p ExamplePager) Read(logicalFile string, offset int, nbytes int) []byte {
 }
 
 func (p ExamplePager) Write(logicalFile string, offset int, data []byte) bool {
-	store, exist := p.files[logicalFile]
+	store, exist := p.Files[logicalFile]
 	dataBoundary := offset + len(data)
 
 	// if no such file, create one
 	if !exist {
-		p.files[logicalFile] = make([]byte, dataBoundary+1)
-		store = p.files[logicalFile]
+		p.Files[logicalFile] = make([]byte, dataBoundary+1)
+		store = p.Files[logicalFile]
 	}
 
 	// if original file is too small, extend it
@@ -49,7 +49,7 @@ func (p ExamplePager) Write(logicalFile string, offset int, data []byte) bool {
 		newStore := make([]byte, dataBoundary+1)
 		copy(newStore, store)
 		store = newStore
-		p.files[logicalFile] = newStore
+		p.Files[logicalFile] = newStore
 	}
 
 	// write data to specific location

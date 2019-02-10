@@ -1,6 +1,9 @@
 package storage
 
-import "abcdb/sql"
+import (
+	"abcdb/pager"
+	"abcdb/sql"
+)
 
 // Storage : Storage manager providing high level interfaces for
 // manipulating db internal data.
@@ -8,6 +11,7 @@ import "abcdb/sql"
 // It only modifies data INDIRECTLY through Pager(see `pager.Pager`).
 type Storage struct {
 	// TODO
+	Pager pager.Pager
 }
 
 // LinearScan returns a `Stream` (see `storage.Stream`) that retrieves
@@ -27,7 +31,19 @@ func (s *Storage) LinearScan(
 // - `table.Name` is duplicated
 func (s *Storage) CreateTable(table sql.Table) error {
 	// TODO:
-	panic("NOT IMPLEMENTED")
+	if s.Pager == nil {
+		panic("No Pager!")
+	}
+	s.Pager.Write("TableName", 0, []byte(table.Name))
+	offset := 0
+	for n, f := range table.Fields {
+		s.Pager.Write("FieldsType", n, []byte{byte(f.Type)})
+		s.Pager.Write("FieldsName", offset, []byte(f.Name))
+		offset += len([]byte(f.Name))
+		s.Pager.Write("FieldsName", offset, []byte("\t"))
+		offset++
+	}
+	return nil
 }
 
 type InsertValue struct {
