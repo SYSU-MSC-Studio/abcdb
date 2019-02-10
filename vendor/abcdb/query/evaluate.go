@@ -6,10 +6,11 @@ import (
 	"io"
 )
 
-// Evaluator is
-type Evaluator struct {
-	Storage *storage.DataStore
-	// TODO
+// Evaluator provides interface to evaluate each component of query plan tree,
+// it serves almost the same purpose of a "visitor pattern" except with a more
+// informative naming.
+type Evaluator interface {
+	EvaluateLinearScan(*LinearScan)
 }
 
 // Execute the SQL statement
