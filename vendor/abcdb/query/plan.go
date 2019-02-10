@@ -46,8 +46,8 @@ type LinearScan struct {
 }
 
 // Evaluate a LinearScan
-func (*LinearScan) Evaluate(e Evaluator) {
-	// TODO
+func (l *LinearScan) Evaluate(e Evaluator) {
+	e.EvaluateLinearScan(l)
 }
 
 // EstimatedRows of LinearScan is exactly its table size
