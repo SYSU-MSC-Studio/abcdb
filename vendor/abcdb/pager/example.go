@@ -58,3 +58,18 @@ func (p ExamplePager) Write(logicalFile string, offset int, data []byte) bool {
 	// our simple pager never fail
 	return true
 }
+
+// PageSize of ExamplePager makes no sense
+func (p ExamplePager) PageSize() int {
+	return math.MaxInt32
+}
+
+// Flush for ExamplePager: do nothing
+func (p ExamplePager) Flush(file string) error {
+	return nil
+}
+
+// FlushAll for ExamplePager: do nothing
+func (p ExamplePager) FlushAll() error {
+	return nil
+}
