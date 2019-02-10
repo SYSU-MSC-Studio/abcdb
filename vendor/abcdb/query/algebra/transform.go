@@ -12,23 +12,22 @@ import (
 // - output operator should express identical semantic of input SQL
 func FromAST(sql ast.Select) Operator {
 	// TODO:
-	return BasicTransformer{}.Transform(nil)
+	return AlgebraicTransform(nil)
 }
 
-// Transformer performs algebra equivalent transformations
-// to a relational algebra operator tree (see query/algebra/operators.go for operator tree).
-type Transformer interface {
-	Transform(Operator) Operator
+// AlgebraicTransform performs basic transformation based on algebraic
+//   properties of relational algebra trying to positively optimize the
+//   structure of the operator.
+func AlgebraicTransform(op Operator) Operator {
+	// TODO: try to compose possible transformations implemented
+	return op
 }
 
-// BasicTransformer performs very basic (or even trivial) transformations
-// to relational algebra operator trees.
-//
-// see [wiki](https://en.wikipedia.org/wiki/Relational_algebra#Use_of_algebraic_properties_for_query_optimization)
-// for more information.
-type BasicTransformer struct{}
-
-func (t BasicTransformer) Transform(root Operator) Operator {
-	// TODO:
-	return root
+// SquashRedundantProjection is one of the equivalent transformation that is
+//   almost always good.
+// See https://en.wikipedia.org/wiki/Relational_algebra#Basic_projection_properties
+func SquashRedundantProjection(op Operator) Operator {
+	// TODO: although usually this is not useful in real life, implement it as
+	//   a practice.
+	return nil
 }
