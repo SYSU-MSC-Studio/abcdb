@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"abcdb/pager"
 	"abcdb/sql"
 )
 
@@ -22,12 +23,11 @@ type DataStore interface {
 	// **contracts**
 	//
 	// - `∀ value ∈ values. value.Field ∈ into.Fields`
-	Insert(into *sql.Table, values []InsertValue) error
-}
+	Insert(into *sql.Table, values []sql.FieldData) error
 
-type InsertValue struct {
-	Field *sql.Field
-	Value sql.Value
+	// Flush data specified in `tables` to the disk (with `Pager.Flush(..)`),
+	//   if `tables == nil`, data in every table under management are flushed
+	Flush(tables []*sql.Table) error
 }
 
 // RecordStream is a Record generator that returns `sql.Record` lazily by
@@ -35,7 +35,14 @@ type InsertValue struct {
 //
 // **contract**
 //
-// - `(sql.Record == nil && error != nil) || (sql.Record != nil && error == nil)`
+// - `(sql.Record == nil XOR error == nil) == true`
 type RecordStream interface {
 	Next() (sql.Record, error)
+}
+
+// InitDataStore : initialize a `DataStore` instance with a `Pager` instance
+//   (see 'abcdb/pager/interface.go')
+func InitDataStore(pager pager.Pager) DataStore {
+	// TODO
+	return nil
 }
