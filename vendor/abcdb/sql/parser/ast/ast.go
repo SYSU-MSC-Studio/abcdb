@@ -43,17 +43,7 @@ func (c *CreateTable) AcceptSQLVisitor(visitor SQLVisitor) interface{} {
 // Insert implements SQL
 type Insert struct {
 	Table  string
-	Values []InsertValue
-}
-
-// InsertValue : which value insert to which field
-//
-// **contract**
-//
-// - `Field.Type == Value.Type()`
-type InsertValue struct {
-	Field *sql.Field
-	Value sql.Value
+	Values []sql.FieldData
 }
 
 func (i *Insert) AcceptSQLVisitor(visitor SQLVisitor) interface{} {

@@ -19,7 +19,7 @@ import (
 // **contract**
 //
 // - `database != nil`
-// - `(ast == nil && error != nil) || (ast != nil && error == nil)`
+// - `(ast == nil XOR error == nil) == true`
 // - `database` is readonly
 func Parse(database *sql.Database, sql string) (ast.SQL, error) {
 	// TODO
