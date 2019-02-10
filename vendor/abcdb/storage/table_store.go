@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"abcdb/pager"
 	"abcdb/sql"
 )
 
@@ -20,4 +21,14 @@ type TableStore interface {
 
 	// Database returns the meta-data describing the running database
 	Database() *sql.Database
+
+	// Flush all database information to the disk (with `Pager.Flush(..)`)
+	Flush() error
+}
+
+// InitTableStore : initialize a `TableStore` instance with a `Pager` instance
+//   (see 'abcdb/pager/interface.go')
+func InitTableStore(pager pager.Pager) TableStore {
+	// TODO
+	return nil
 }
