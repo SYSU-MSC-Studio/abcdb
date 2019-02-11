@@ -1,2 +1,2 @@
 # abcdb
-Amateurs' Basic Centralised Database 1
+Amateurs' Basic Centralised Database
