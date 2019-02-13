@@ -3,6 +3,8 @@ package storage
 import (
 	"abcdb/pager"
 	"abcdb/sql"
+	"errors"
+	"fmt"
 )
 
 // DataStore provids high level interfaces for retrieving and manipulating
@@ -58,6 +60,20 @@ func RecordLength(table *sql.Table) int {
 	return length
 }
 
+type SimpleStream struct {
+	RecordList []sql.Record
+}
+
+func (SimpleStream *SimpleStream) Next() (sql.Record, error) {
+	if len(SimpleStream.RecordList) == 0 {
+		return nil, errors.New(
+			"no records left")
+	}
+	nextrecord := SimpleStream.RecordList[0]
+	SimpleStream.RecordList = SimpleStream.RecordList[1:]
+	return nextrecord, nil
+}
+
 // InitDataStore : initialize a `DataStore` instance with a `Pager` instance
 //   (see 'abcdb/pager/interface.go')
 func InitDataStore(pager pager.Pager) DataStore {
@@ -66,12 +82,29 @@ func InitDataStore(pager pager.Pager) DataStore {
 
 type SimpleManager struct {
 	CurrentPager pager.Pager
-	// TODO:
 }
 
 func (SimpleManager *SimpleManager) LinearScan(
 	table *sql.Table, targetfields []sql.Field) (RecordStream, error) {
-	panic("")
+	SimpleStream := &SimpleStream{RecordList: make([]sql.Record, 0)}
+	errcount := 0
+	for i := 0; i <= table.NRecords; i++ {
+		record, err := MakeDeserializer(table).Deserialize(
+			SimpleManager.CurrentPager.Read(
+				table.Name+"_records",
+				RecordLength(table)*i,
+				RecordLength(table)))
+		if err != nil {
+			errcount++
+			continue
+		}
+		SimpleStream.RecordList = append(SimpleStream.RecordList, record)
+	}
+	if errcount != 0 {
+		return SimpleStream, fmt.Errorf(
+			"%v records can't be deserialized", errcount)
+	}
+	return SimpleStream, nil
 }
 
 func (SimpleManager *SimpleManager) Insert(
@@ -85,7 +118,7 @@ func (SimpleManager *SimpleManager) Insert(
 		}
 	}
 	SimpleManager.CurrentPager.Write(
-		into.Name, into.NRecords*RecordLength(into), Serialize(orderedrecord))
+		into.Name+"_records", into.NRecords*RecordLength(into), Serialize(orderedrecord))
 	return nil
 }
 
