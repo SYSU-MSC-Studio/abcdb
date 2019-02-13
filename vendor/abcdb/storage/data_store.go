@@ -43,6 +43,24 @@ type RecordStream interface {
 // InitDataStore : initialize a `DataStore` instance with a `Pager` instance
 //   (see 'abcdb/pager/interface.go')
 func InitDataStore(pager pager.Pager) DataStore {
-	// TODO
-	return nil
+	return SimpleManager{CurrentPager: pager}
+}
+
+type SimpleManager struct {
+	CurrentPager pager.Pager
+	// TODO:
+}
+
+func (SimpleManager *SimpleManager) LinearScan(
+	table *sql.Table, fields []sql.Field) (RecordStream, error) {
+	panic("")
+}
+
+func (SimpleManager *SimpleManager) Insert(
+	into *sql.Table, values []sql.FieldData) error {
+	panic("")
+}
+
+func (SimpleManager *SimpleManager) Flush(tables []*sql.Table) error {
+	panic("")
 }
