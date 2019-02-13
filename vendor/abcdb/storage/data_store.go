@@ -16,7 +16,7 @@ type DataStore interface {
 	// **contract**
 	//
 	// - `∀ field ∈ fields. field ∈ table.Fields`
-	LinearScan(table *sql.Table, fields []sql.Field) (RecordStream, error)
+	LinearScan(table *sql.Table, targetfields []sql.Field) (RecordStream, error)
 
 	// Insert returns nil or an error when
 	//
@@ -40,10 +40,31 @@ type RecordStream interface {
 	Next() (sql.Record, error)
 }
 
+// RecordLength : return the byte length of a record
+func RecordLength(table *sql.Table) int {
+	length := 0
+	for _, field := range table.Fields {
+		switch datatype := field.Type; datatype {
+		case sql.BOOL:
+			length++
+		case sql.INT32:
+			length += 4
+		case sql.DOUBLE:
+			length += 8
+		case sql.CHAR64:
+			length += 64
+		}
+	}
+	return length
+}
+
+type ByteStream struct {
+}
+
 // InitDataStore : initialize a `DataStore` instance with a `Pager` instance
 //   (see 'abcdb/pager/interface.go')
 func InitDataStore(pager pager.Pager) DataStore {
-	return SimpleManager{CurrentPager: pager}
+	return &SimpleManager{CurrentPager: pager}
 }
 
 type SimpleManager struct {
@@ -52,15 +73,28 @@ type SimpleManager struct {
 }
 
 func (SimpleManager *SimpleManager) LinearScan(
-	table *sql.Table, fields []sql.Field) (RecordStream, error) {
+	table *sql.Table, targetfields []sql.Field) (RecordStream, error) {
 	panic("")
 }
 
 func (SimpleManager *SimpleManager) Insert(
 	into *sql.Table, values []sql.FieldData) error {
-	panic("")
+	orderedrecord := make([]sql.Value, 0)
+	for _, value := range values {
+		for _, field := range into.Fields {
+			if *value.Field == field {
+				orderedrecord = append(orderedrecord, value.Value)
+			}
+		}
+	}
+	SimpleManager.CurrentPager.Write(
+		into.Name, into.NRecords*RecordLength(into), Serialize(orderedrecord))
+	return nil
 }
 
 func (SimpleManager *SimpleManager) Flush(tables []*sql.Table) error {
-	panic("")
+	for _, table := range tables {
+		SimpleManager.CurrentPager.Flush(table.Name)
+	}
+	return nil
 }
