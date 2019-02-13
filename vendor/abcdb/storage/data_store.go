@@ -58,9 +58,6 @@ func RecordLength(table *sql.Table) int {
 	return length
 }
 
-type ByteStream struct {
-}
-
 // InitDataStore : initialize a `DataStore` instance with a `Pager` instance
 //   (see 'abcdb/pager/interface.go')
 func InitDataStore(pager pager.Pager) DataStore {
