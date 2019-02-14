@@ -87,22 +87,25 @@ type SimpleManager struct {
 func (SimpleManager *SimpleManager) LinearScan(
 	table *sql.Table, targetfields []sql.Field) (RecordStream, error) {
 	SimpleStream := &SimpleStream{RecordList: make([]sql.Record, 0)}
-	errcount := 0
 	for i := 0; i <= table.NRecords; i++ {
-		record, err := MakeDeserializer(table).Deserialize(
-			SimpleManager.CurrentPager.Read(
-				table.Name+"_records",
-				RecordLength(table)*i,
-				RecordLength(table)))
+		byterecord := SimpleManager.CurrentPager.Read(
+			table.Name+"_records",
+			RecordLength(table)*i,
+			RecordLength(table))
+		record, err := MakeDeserializer(table).Deserialize(byterecord)
 		if err != nil {
-			errcount++
-			continue
+			return nil, fmt.Errorf(
+				"a record can't be deserialized")
 		}
-		SimpleStream.RecordList = append(SimpleStream.RecordList, record)
-	}
-	if errcount != 0 {
-		return SimpleStream, fmt.Errorf(
-			"%v records can't be deserialized", errcount)
+		targetrecord := make([]sql.Value, 0)
+		for _, targetfield := range targetfields {
+			for i, field := range table.Fields {
+				if targetfield == field {
+					targetrecord = append(targetrecord, record[i])
+				}
+			}
+		}
+		SimpleStream.RecordList = append(SimpleStream.RecordList, targetrecord)
 	}
 	return SimpleStream, nil
 }
@@ -118,7 +121,8 @@ func (SimpleManager *SimpleManager) Insert(
 		}
 	}
 	SimpleManager.CurrentPager.Write(
-		into.Name+"_records", into.NRecords*RecordLength(into), Serialize(orderedrecord))
+		into.Name+"_records",
+		into.NRecords*RecordLength(into), Serialize(orderedrecord))
 	return nil
 }
 
