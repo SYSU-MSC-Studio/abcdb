@@ -4,7 +4,6 @@ import (
 	"abcdb/pager"
 	"abcdb/sql"
 	"errors"
-	"fmt"
 )
 
 // DataStore provids high level interfaces for retrieving and manipulating
