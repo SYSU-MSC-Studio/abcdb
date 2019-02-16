@@ -94,8 +94,7 @@ func (SimpleManager *SimpleManager) LinearScan(
 			RecordLength(table))
 		record, err := MakeDeserializer(table).Deserialize(byterecord)
 		if err != nil {
-			return nil, fmt.Errorf(
-				"a record can't be deserialized")
+			return nil, err
 		}
 		targetrecord := make([]sql.Value, 0)
 		for _, targetfield := range targetfields {
@@ -105,7 +104,8 @@ func (SimpleManager *SimpleManager) LinearScan(
 				}
 			}
 		}
-		SimpleStream.RecordList = append(SimpleStream.RecordList, targetrecord)
+		SimpleStream.RecordList = append(
+			SimpleStream.RecordList, targetrecord)
 	}
 	return SimpleStream, nil
 }
