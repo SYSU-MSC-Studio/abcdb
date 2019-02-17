@@ -12,11 +12,11 @@ import (
 // It only modifies data INDIRECTLY through Pager(see `pager.Pager`).
 type DataStore interface {
 	// LinearScan returns a `Stream` (see `storage.Stream`) that retrieves
-	// sql.Record lazily. `fields` determine the wanted field(s)
+	// sql.Record lazily. `targetfields` determine the wanted field(s)
 	//
 	// **contract**
 	//
-	// - `∀ field ∈ fields. field ∈ table.Fields`
+	// - `∀ field ∈ targetfields. field ∈ table.Fields`
 	LinearScan(table *sql.Table, targetfields []sql.Field) (RecordStream, error)
 
 	// Insert returns nil or an error when
