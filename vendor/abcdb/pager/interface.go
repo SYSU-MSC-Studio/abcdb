@@ -21,7 +21,4 @@ type Pager interface {
 
 	// Like `Flush()`, except all dirty data are flushed to the disk.
 	FlushAll() error
-
-	//only I would use this function
-	OpenFile()
 }

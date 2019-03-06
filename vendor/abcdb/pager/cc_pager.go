@@ -61,14 +61,14 @@ func (p StructPager) Read(logicalFile string, offset int, nbytes int) []byte {
 		result = append(result, Page.data[start:end]...)
 
 	}
-	println(p.files[1].header.FileName)
 	return result
 }
 
 //Write is a function
 func (p StructPager) Write(logicalFile string, offset int, data []byte) (success bool) {
-	testPrintPager()
-	println(p.files[0].header.FileName)
+	testPrintPager() //just for test, you can see clearly what has changed
+
+	//println(p.files[0].header.FileName)//in fact you can't get access to pager(p) in all interface function
 	var i int
 	var Page Page
 	var start, end int //start & end is different from offset, it must % PAGEMAX
@@ -80,7 +80,7 @@ func (p StructPager) Write(logicalFile string, offset int, data []byte) (success
 	boundary := offset + nbytes ///here offset start from 0
 	FirstPage = offset/PAGEMAX + 1
 	LastPage = boundary/PAGEMAX + 1
-	//
+
 	for i = FirstPage; i <= LastPage; i++ {
 		start = (i - 1) * PAGEMAX
 		end = i * PAGEMAX
@@ -104,17 +104,13 @@ func (p StructPager) Write(logicalFile string, offset int, data []byte) (success
 		Page.data = append(Page.data[:start], tempdata...)
 		Page.data = append(Page.data, temp...)
 	}
-	testPrintPager()
+
+	testPrintPager() //just for test
 	return true
 }
 
 // PageSize is
 func (p StructPager) PageSize() int {
-	// var i int
-	// var size int
-	// for i = 0; i < p.PageNumber; i++ {
-	// 	size += p.files[i].header.UsedSpace
-	// }
 	return PAGEMAX
 }
 
@@ -127,7 +123,6 @@ func (p StructPager) Flush(FileName string) error {
 // FlushAll for Pager: do nothing
 func (p StructPager) FlushAll() error {
 	var i int
-	println(p.FileNumber)
 	for i = 0; i < p.FileNumber; i++ {
 		p.Flush(p.Name[i])
 	}
